@@ -14,8 +14,8 @@ class ExpenseState extends Equatable {
   final OCRStatus ocrStatus;
   final String ocrError;
 
-  // Add validationErrors
   final Map<String, String> validationErrors;
+  final bool isSubmitSuccessful; // NEW
 
   const ExpenseState({
     this.title = '',
@@ -27,6 +27,7 @@ class ExpenseState extends Equatable {
     this.ocrStatus = OCRStatus.initial,
     this.ocrError = '',
     this.validationErrors = const {},
+    this.isSubmitSuccessful = false,
   });
 
   ExpenseState copyWith({
@@ -39,6 +40,7 @@ class ExpenseState extends Equatable {
     OCRStatus? ocrStatus,
     String? ocrError,
     Map<String, String>? validationErrors,
+    bool? isSubmitSuccessful,
   }) {
     return ExpenseState(
       title: title ?? this.title,
@@ -50,6 +52,7 @@ class ExpenseState extends Equatable {
       ocrStatus: ocrStatus ?? this.ocrStatus,
       ocrError: ocrError ?? this.ocrError,
       validationErrors: validationErrors ?? this.validationErrors,
+      isSubmitSuccessful: isSubmitSuccessful ?? false,
     );
   }
 
@@ -64,5 +67,6 @@ class ExpenseState extends Equatable {
     ocrStatus,
     ocrError,
     validationErrors,
+    isSubmitSuccessful,
   ];
 }

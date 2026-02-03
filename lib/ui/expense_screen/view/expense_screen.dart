@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:invesq/utils/enum_utils.dart';
 
 import '../../../utils/color_utils.dart';
+import '../../../utils/snackbar_utils.dart';
 import '../../../utils/text_utils.dart';
 import '../../../widgets/custom_button_widget.dart';
 import '../../../widgets/text_form_field_widget.dart';
@@ -63,13 +65,14 @@ class ExpenseForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<ExpenseBloc, ExpenseState>(
       listener: (context, state) {
-        if (state.validationErrors.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Expense saved successfully!"),
-              duration: Duration(seconds: 2),
-            ),
+        if (state.isSubmitSuccessful) {
+          SnackBarUtils.showSnackBar(
+            type: SnackBarType.success,
+            message: "Expense saved successfully!",
           );
+
+          // Optionally reset the flag so it doesn't trigger again
+          context.read<ExpenseBloc>().add(ResetSubmitStatusEvent());
         }
       },
       child: BlocBuilder<ExpenseBloc, ExpenseState>(

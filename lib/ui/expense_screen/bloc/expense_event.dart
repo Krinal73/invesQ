@@ -39,6 +39,8 @@ class ExpenseDateChanged extends ExpenseEvent {
   ExpenseDateChanged(this.date);
 }
 
+class ResetSubmitStatusEvent extends ExpenseEvent {}
+
 class OCRProcessEvent extends ExpenseEvent {
   final File file;
   OCRProcessEvent(this.file);

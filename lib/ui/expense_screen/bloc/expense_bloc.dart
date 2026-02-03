@@ -12,6 +12,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
     on<PickReceiptImageEvent>(_onReceiptPicked);
     on<OCRProcessEvent>(_onOCRProcess);
     on<SubmitExpenseEvent>(_onSubmitExpense);
+    on<ResetSubmitStatusEvent>(_onResetSubmitStatus);
     on<ExpenseDateChanged>(_onDateChanged);
     on<ExpenseTitleChanged>((event, emit) {
       emit(state.copyWith(title: event.title));
@@ -76,6 +77,13 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
     }
   }
 
+  void _onResetSubmitStatus(
+    ResetSubmitStatusEvent event,
+    Emitter<ExpenseState> emit,
+  ) {
+    emit(state.copyWith(isSubmitSuccessful: false));
+  }
+
   void _onSubmitExpense(SubmitExpenseEvent event, Emitter<ExpenseState> emit) {
     // Validation map
     final validationErrors = <String, String>{};
@@ -102,7 +110,12 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
 
     // Update state with validation errors
     if (validationErrors.isNotEmpty) {
-      emit(state.copyWith(validationErrors: validationErrors));
+      emit(
+        state.copyWith(
+          validationErrors: validationErrors,
+          isSubmitSuccessful: false,
+        ),
+      );
       print('Validation failed:');
       validationErrors.forEach((key, value) => print(' - $value'));
       return; // stop further processing
@@ -118,7 +131,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
     print("Notes: ${event.notes}");
 
     // Clear validation errors after successful submit
-    emit(state.copyWith(validationErrors: {}));
+    emit(state.copyWith(validationErrors: {}, isSubmitSuccessful: true));
   }
 
   @override
